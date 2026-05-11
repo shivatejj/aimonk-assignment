@@ -1,13 +1,15 @@
 from flask import Flask, request
 from flask_cors import CORS
+
 from supabase_client import supabase
 
 
 app = Flask(__name__)
+
 CORS(app)
 
 
-
+# HOME ROUTE
 @app.route("/")
 def home():
 
@@ -16,7 +18,7 @@ def home():
     }
 
 
-
+# GET ALL TREES
 @app.route("/trees", methods=["GET"])
 def get_trees():
 
@@ -39,11 +41,14 @@ def get_trees():
         }, 500
 
 
-
+# SAVE NEW TREE
 @app.route("/trees", methods=["POST"])
 def save_tree():
+
     try:
+
         data = request.json
+
         response = (
             supabase
             .table("trees")
@@ -52,10 +57,12 @@ def save_tree():
             })
             .execute()
         )
+
         return {
             "message": "Tree saved successfully",
             "data": response.data
         }
+
     except Exception as error:
 
         return {
@@ -63,11 +70,14 @@ def save_tree():
         }, 500
 
 
-        
+# UPDATE EXISTING TREE
 @app.route("/trees/<int:tree_id>", methods=["PUT"])
 def update_tree(tree_id):
+
     try:
+
         data = request.json
+
         response = (
             supabase
             .table("trees")
@@ -77,11 +87,14 @@ def update_tree(tree_id):
             .eq("id", tree_id)
             .execute()
         )
+
         return {
             "message": "Tree updated successfully",
             "data": response.data
         }
+
     except Exception as error:
+
         return {
             "error": str(error)
         }, 500
